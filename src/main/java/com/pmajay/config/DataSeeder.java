@@ -2,6 +2,8 @@ package com.pmajay.config;
 
 import com.pmajay.model.*;
 import com.pmajay.repository.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,6 +20,8 @@ import java.util.List;
  */
 @Component
 public class DataSeeder implements CommandLineRunner {
+
+    private static final Logger logger = LoggerFactory.getLogger(DataSeeder.class);
 
     @Autowired private StateRepository stateRepository;
     @Autowired private UserRepository userRepository;
@@ -42,12 +46,12 @@ public class DataSeeder implements CommandLineRunner {
             // Then restrict ENUM to only the new values
             jdbcTemplate.execute("ALTER TABLE approvals MODIFY COLUMN status ENUM('PENDING_STATE', 'PENDING_CENTRE', 'APPROVED', 'REJECTED')");
         } catch (Exception e) {
-            System.out.println("⚠️ Migration notice: " + e.getMessage());
+            logger.debug("Migration notice: {}", e.getMessage());
         }
 
         // Ensure missing agency users are created for testing
         if (userRepository.findByEmail("agency-bihar@pmajay.gov.in").isEmpty() && agencyRepository.count() > 0) {
-            System.out.println("Seeding additional agency users...");
+            logger.info("Seeding additional agency users...");
             List<Agency> agencies = agencyRepository.findAll();
             if (agencies.size() >= 5) {
                 userRepository.save(User.builder().name("Agency Officer Bihar").email("agency-bihar@pmajay.gov.in").password(passwordEncoder.encode("agency123")).role(User.Role.AGENCY).stateId(2L).agencyId(agencies.get(1).getId()).build());
@@ -273,6 +277,6 @@ public class DataSeeder implements CommandLineRunner {
                 .amount(new BigDecimal("45000000")).stateId(1L).submittedBy(2L)
                 .remarks("Annual consolidated report").status(Report.ReportStatus.SUBMITTED).build());
 
-        System.out.println("✅ Sample data seeded successfully!");
+        logger.info("Sample data seeded successfully.");
     }
 }

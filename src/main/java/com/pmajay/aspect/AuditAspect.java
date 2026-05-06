@@ -6,6 +6,8 @@ import com.pmajay.security.JwtUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -14,6 +16,8 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 @Aspect
 @Component
 public class AuditAspect {
+
+    private static final Logger logger = LoggerFactory.getLogger(AuditAspect.class);
 
     @Autowired
     private AuditLogRepository auditLogRepository;
@@ -72,7 +76,7 @@ public class AuditAspect {
             auditLogRepository.save(log);
         } catch (Exception e) {
             // Audit logging should not break the main flow
-            System.err.println("Audit logging error: " + e.getMessage());
+            logger.error("Audit logging error: {}", e.getMessage());
         }
     }
 }
