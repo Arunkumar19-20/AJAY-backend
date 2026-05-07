@@ -1,6 +1,7 @@
 /Users/arun/Desktop/LUMINA/backend/src/main/java/com/pmajay/security/JwtRequestFilter.java
 /Users/arun/Desktop/LUMINA/backend/src/main/java/com/pmajay/repository/UserRepository.java
 /Users/arun/Desktop/LUMINA/backend/src/main/java/com/pmajay/model/State.java
+/Users/arun/Desktop/LUMINA/backend/src/main/java/com/pmajay/config/CorsConfig.java
 /Users/arun/Desktop/LUMINA/backend/src/main/java/com/pmajay/repository/ProjectRepository.java
 /Users/arun/Desktop/LUMINA/backend/src/main/java/com/pmajay/dto/DashboardSummary.java
 /Users/arun/Desktop/LUMINA/backend/src/main/java/com/pmajay/controller/DocumentController.java
