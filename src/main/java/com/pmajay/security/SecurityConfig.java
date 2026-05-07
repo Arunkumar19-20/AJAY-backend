@@ -23,78 +23,87 @@ import java.util.List;
 @EnableMethodSecurity
 public class SecurityConfig {
 
-    @Autowired
-    private JwtRequestFilter jwtRequestFilter;
+        @Autowired
+        private JwtRequestFilter jwtRequestFilter;
 
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
-        return config.getAuthenticationManager();
-    }
+        @Bean
+        public AuthenticationManager authenticationManager(
+                        AuthenticationConfiguration config) throws Exception {
 
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
+                return config.getAuthenticationManager();
+        }
 
-        CorsConfiguration configuration = new CorsConfiguration();
+        @Bean
+        public CorsConfigurationSource corsConfigurationSource() {
 
-        configuration.setAllowedOrigins(List.of(
-                "http://localhost:5173",
-                "http://localhost:3000",
-                "https://ajay-backend-1.onrender.com",
-                "https://69fc56f6d402dc18e16e13d7--pm-aja.netlify.app",
-                "https://pm-aja.netlify.app"
-        ));
+                CorsConfiguration configuration = new CorsConfiguration();
 
-        configuration.setAllowedMethods(Arrays.asList(
-                "GET",
-                "POST",
-                "PUT",
-                "DELETE",
-                "OPTIONS"
-        ));
+                // Allow all frontend origins
+                configuration.setAllowedOriginPatterns(List.of("*"));
 
-        configuration.setAllowedHeaders(Arrays.asList(
-                "Authorization",
-                "Content-Type",
-                "X-Requested-With"
-        ));
+                // Allow all HTTP methods
+                configuration.setAllowedMethods(Arrays.asList(
+                                "GET",
+                                "POST",
+                                "PUT",
+                                "DELETE",
+                                "OPTIONS"));
 
-        configuration.setAllowCredentials(true);
+                // Allow request headers
+                configuration.setAllowedHeaders(Arrays.asList(
+                                "Authorization",
+                                "Content-Type",
+                                "Accept",
+                                "Origin",
+                                "X-Requested-With"));
 
-        UrlBasedCorsConfigurationSource source =
-                new UrlBasedCorsConfigurationSource();
+                // Expose headers to frontend
+                configuration.setExposedHeaders(Arrays.asList(
+                                "Authorization",
+                                "Content-Type"));
 
-        source.registerCorsConfiguration("/**", configuration);
+                // Disable credentials
+                configuration.setAllowCredentials(false);
 
-        return source;
-    }
+                UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+                source.registerCorsConfiguration("/**", configuration);
 
-        http
-                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                return source;
+        }
 
-                .csrf(csrf -> csrf.disable())
+        @Bean
+        public SecurityFilterChain securityFilterChain(HttpSecurity http)
+                        throws Exception {
 
-                .authorizeHttpRequests(auth -> auth
+                http
 
-                        // Public Routes
-                        .requestMatchers("/").permitAll()
-                        .requestMatchers("/api/**").permitAll()
+                                // Enable CORS
+                                .cors(cors -> cors.configurationSource(
+                                                corsConfigurationSource()))
 
-                        // Protected Routes
-                        .anyRequest().authenticated()
-                )
+                                // Disable CSRF
+                                .csrf(csrf -> csrf.disable())
 
-                .sessionManagement(session ->
-                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                )
+                                // Routes
+                                .authorizeHttpRequests(auth -> auth
 
-                .addFilterBefore(
-                        jwtRequestFilter,
-                        UsernamePasswordAuthenticationFilter.class
-                );
+                                                // Public routes
+                                                .requestMatchers("/").permitAll()
+                                                .requestMatchers("/api/**").permitAll()
 
-        return http.build();
-    }
+                                                // Other routes
+                                                .anyRequest().authenticated())
+
+                                // Stateless JWT session
+                                .sessionManagement(session -> session.sessionCreationPolicy(
+                                                SessionCreationPolicy.STATELESS))
+
+                                // JWT filter
+                                .addFilterBefore(
+                                                jwtRequestFilter,
+                                                UsernamePasswordAuthenticationFilter.class);
+
+                return http.build();
+        }
 }
