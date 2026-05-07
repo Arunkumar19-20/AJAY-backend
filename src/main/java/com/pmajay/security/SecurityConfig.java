@@ -39,7 +39,9 @@ public class SecurityConfig {
         configuration.setAllowedOrigins(List.of(
                 "http://localhost:5173",
                 "http://localhost:3000",
-                "https://ajay-backend-1.onrender.com"
+                "https://ajay-backend-1.onrender.com",
+                "https://69fc56f6d402dc18e16e13d7--pm-aja.netlify.app",
+                "https://pm-aja.netlify.app"
         ));
 
         configuration.setAllowedMethods(Arrays.asList(
