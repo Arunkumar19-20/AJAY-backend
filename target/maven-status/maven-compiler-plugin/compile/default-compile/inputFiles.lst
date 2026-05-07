@@ -24,6 +24,7 @@
 /Users/arun/Desktop/LUMINA/backend/src/main/java/com/pmajay/config/DataSeeder.java
 /Users/arun/Desktop/LUMINA/backend/src/main/java/com/pmajay/service/NotificationService.java
 /Users/arun/Desktop/LUMINA/backend/src/main/java/com/pmajay/controller/ReportController.java
+/Users/arun/Desktop/LUMINA/backend/src/main/java/com/pmajay/controller/TestController.java
 /Users/arun/Desktop/LUMINA/backend/src/main/java/com/pmajay/aspect/AuditAspect.java
 /Users/arun/Desktop/LUMINA/backend/src/main/java/com/pmajay/controller/ApprovalController.java
 /Users/arun/Desktop/LUMINA/backend/src/main/java/com/pmajay/repository/ApprovalRepository.java
